@@ -20,7 +20,7 @@ Data Dictionary: Product Metadata (Both Luxury and Regular Product Data Sets)
 | Category      | product category       |
 | Tech1   | the first technical detail table of the product        |
 | description   | description of the product        |
-| fit   | Fit description or use instructions of the product        |
+| fit   | fit description or use instructions of the product        |
 | title   | name of the product        |
 | also_buy   | related products        |
 | tech2   | the second technical detail table of the product        |
