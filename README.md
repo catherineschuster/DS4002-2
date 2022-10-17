@@ -12,7 +12,7 @@ If you find our models or code useful, please add suitable reference to our proj
 
 ## DATA
 
-The data for this project is sourced from Jianmo Ni’s Amazon Review Data Github [1]. The database is an updated 2018 version of the Amazon review dataset released in 2014, including metadata and review data for all amazon product categories. The specific four datasets used for this project includes the product metadata and reviews data for both luxury and normal beauty products. Data features include product ratings, review text, helpfulness votes, and product metadata (product descriptions, category information, price, and brand). Full access to the data is located in the Data folder of this repository and the data dictionary is below:
+The data for this project is sourced from Jianmo Ni’s Amazon Review Data Github [1]. The database is an updated 2018 version of the Amazon review dataset released in 2014, including metadata and review data for all amazon product categories. The specific four datasets used for this project includes the product metadata and reviews data for both luxury and normal beauty products. Data features include product ratings, review text, helpfulness votes, and product metadata (product descriptions, category information, price, and brand). For EDA and sentiment analysis, the datasets were cleaned and merged into two files called AllBeauty_Merged.csv and LuxBeauty_Merged.csv. Full access to all data is located in the Data folder of this repository. The data dictionary for the source data is below:
 
 Data Dictionary: Product Metadata (Both Luxury and Regular Product Data Sets)
 | Column      | Description |
