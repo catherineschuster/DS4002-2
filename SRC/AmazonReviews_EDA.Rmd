@@ -1,0 +1,95 @@
+---
+title: "AmazonReviews_EDA"
+author: "Catherine Schuster"
+date: "2022-10-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library('stringr')
+library(patchwork)
+options(scipen=999)
+
+allbeauty_merged <- read.csv("/Users/catherineschuster/Desktop/DS 4002/AllBeauty_Merged.csv")
+luxbeauty_merged <- read.csv("/Users/catherineschuster/Desktop/DS 4002/LuxBeauty_Merged.csv")
+
+allbeauty_merged$type <- "Regular"
+luxbeauty_merged$type <- "Luxury"
+totalbeauty <- rbind(allbeauty_merged,luxbeauty_merged)
+```
+
+
+```{r}
+ggplot(data = totalbeauty[totalbeauty$price < 150,], aes(x=price, color = type, fill = type)) + 
+  geom_density(alpha = .3) + scale_fill_manual(name = NULL, values = c("tomato", "royalblue")) + 
+  scale_color_manual(name = NULL, values = c("tomato", "royalblue"))  + 
+  labs(title = "Beauty Product Price Distribution", subtitle = "Luxury and Regular Amazon Items (2018)", 
+       x = "Price", y = "Density") + theme_minimal()  + theme(legend.position="bottom")  
+```
+
+```{r}
+unique(totalbeauty$overall)
+#
+ggplot(data = totalbeauty[totalbeauty$price < 155,], aes(y=jitter(price), x = jitter(overall), color = type)) + geom_point() 
+totalbeauty$type <- factor(totalbeauty$type, levels = c("Regular", "Luxury"))
+ggplot(totalbeauty, aes(fill=type, y=price, x=overall)) + 
+    geom_bar(position="dodge", stat = "summary", fun.y = "mean") + 
+  scale_fill_manual(name = NULL, values = c("royalblue", "salmon2")) +  theme_minimal() + 
+  labs(x = "Product Rating", y = "Price", title = "Amazon Beauty Product Rating by Average Price", 
+       subtitle = "Grouped by Product Category") + theme(legend.position="bottom")  
+```
+
+
+```{r}
+install.packages("treemap")
+library(treemap)
+library(scales)
+allbeautygroup <- allbeauty_merged %>% group_by(overall) %>% summarize(count = n())
+luxbeautygroup <- luxbeauty_merged %>% group_by(overall) %>% summarize(count = n())
+
+
+allbeautygroup$overall <- as.factor(allbeautygroup$overall)
+# Compute the position of labels
+allbeautygroup <- allbeautygroup %>% 
+  arrange(desc(overall)) %>%
+  mutate(prop = count / sum(allbeautygroup$count) *100) %>%
+  mutate(ypos = cumsum(prop)- 0.5*prop )
+
+# Basic piechart
+allpie <- ggplot(allbeautygroup, aes(x="", y=prop, fill=overall)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  theme_void()  +
+  geom_text(aes(y = ypos, label = paste(round(prop), "%", sep="")),
+            color = "white", size=4) +
+  scale_fill_brewer(name ="", palette="Reds") + 
+  labs(title = "Rating Distribution", subtitle = "Normal Beauty Products")
+
+
+luxbeautygroup$overall <- as.factor(luxbeautygroup$overall)
+# Compute the position of labels
+luxbeautygroup <- luxbeautygroup %>% 
+  arrange(desc(overall)) %>%
+  mutate(prop = count / sum(luxbeautygroup$count) *100) %>%
+  mutate(ypos = cumsum(prop)- 0.5*prop )
+
+# Basic piechart
+luxpie <- ggplot(luxbeautygroup, aes(x="", y=prop, fill=overall)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  theme_void()  +
+  geom_text(aes(y = ypos, label = paste(round(prop), "%", sep="")), 
+            color = "white", size=4) +
+  scale_fill_brewer(name ="", palette="Blues") + 
+  labs(title = "Rating Distribution", subtitle = "Luxury Beauty Products")
+
+allpie + luxpie
+
+```
+

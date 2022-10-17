@@ -1,0 +1,60 @@
+---
+title: "AmazonReviews_Beauty"
+author: "Catherine Schuster"
+date: "2022-10-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# base_size = 18 in theme argument
+library(tidyverse)
+
+
+# ALL BEAUTY REVIEWS DATA
+allbeauty <- read.csv("/Users/catherineschuster/Desktop/DS 4002/All_Beauty.csv") 
+# LUXURY BEAUTY REVIEWS DATA
+luxbeauty <- read.csv("/Users/catherineschuster/Desktop/DS 4002/Luxury_Beauty.csv") 
+# ALL BEAUTY PRODUCT DATA
+allbeauty_product <- read.csv("/Users/catherineschuster/Desktop/DS 4002/meta_All_Beauty.csv") 
+# LUXURY BEAUTY PRODUCT DATA
+luxbeauty_product <- read.csv("/Users/catherineschuster/Desktop/DS 4002/meta_Luxury_Beauty.csv") 
+```
+
+
+```{r}
+luxbeauty_product <- luxbeauty_product[luxbeauty_product$price != "",]
+luxbeauty_product <- luxbeauty_product[startsWith(luxbeauty_product$price, ".") == FALSE,]
+
+luxbeauty_product$price <- as.numeric(gsub("\\$", "", luxbeauty_product$price))
+luxbeauty_product <- drop_na(luxbeauty_product)
+luxbeauty_product <- luxbeauty_product[,-1]
+
+allbeauty_product <- allbeauty_product[allbeauty_product$price != "",]
+allbeauty_product <- allbeauty_product[startsWith(allbeauty_product$price, ".") == FALSE,]
+
+allbeauty_product$price <- as.numeric(gsub("\\$", "", allbeauty_product$price))
+allbeauty_product <- drop_na(allbeauty_product)
+allbeauty_product <- allbeauty_product[,-1]
+```
+
+Clean Reviews Data
+```{r}
+options(scipen=999)
+allbeauty <- allbeauty[,-c(1, 12,13)]
+luxbeauty <- luxbeauty[,-c(1, 12,13)]
+
+# Merge product data and reviews data
+allbeauty_merged <- merge(allbeauty, allbeauty_product, by = "asin")
+luxbeauty_merged <- merge(luxbeauty, luxbeauty_product, by = "asin")
+allbeauty_merged <- allbeauty_merged[duplicated(allbeauty_merged) == FALSE,]
+luxbeauty_merged <- luxbeauty_merged[duplicated(luxbeauty_merged) == FALSE,]
+
+write.csv(luxbeauty_merged,"/Users/catherineschuster/Desktop/DS 4002/LuxBeauty_Merged.csv", row.names = FALSE)
+write.csv(allbeauty_merged,"/Users/catherineschuster/Desktop/DS 4002/AllBeauty_Merged.csv", row.names = FALSE)
+```
+
+
