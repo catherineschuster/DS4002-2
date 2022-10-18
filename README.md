@@ -79,7 +79,7 @@ Data Dictionary: Product Review Sentiments (Both Luxury and Regular Product Data
 | sentiment   | sentiment of review as a string  ("pos", "neu", or "neg)    |
 
 ## FIGURES
-
+The figures presented in this repository are broken into two categories: (1) The figures produced during preliminary EDA to understand the data. This includes visualizing relationships between review ratings, price, and type of product (luxury or regular). (2) The figures produced after sentiment analysis to understand how sentiment trends related to type of product, price, and review ratings.
 
 ## REFERENCES
 
